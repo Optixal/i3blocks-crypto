@@ -1,0 +1,31 @@
+#!/usr/bin/env python3
+# coding=utf-8
+
+import json
+import requests
+import os
+
+PRICE_CHANGE_PERIOD = '1h'
+PRICE_CHANGE_URGENT_PERCENT = 10
+
+API_URL = 'https://api.coinmarketcap.com/v1/ticker/{}/'
+coin = os.environ.get('BLOCK_INSTANCE', 'bitcoin')
+r = requests.get(API_URL.format(coin))
+data = json.loads(r.text)[0]
+
+price = float(data['price_usd'])
+if price > 100: precision = 0
+elif price > 0.1: precision = 2
+else: precision = 6
+
+percentChange = float(data['percent_change_' + PRICE_CHANGE_PERIOD])
+percentChangeFormat = '<span color="{}">{}{:.2f}%</span>'
+if percentChange > 0: percentChangeInfo = percentChangeFormat.format('#9FE697', '', percentChange)
+elif percentChange == 0: percentChangeInfo = percentChangeFormat.format('#CCCCCC', '', percentChange)
+else: percentChangeInfo = percentChangeFormat.format('#F7555E', '', percentChange)
+
+print(('{} {:.' + str(precision) + 'f} {}').format(data['symbol'], price, percentChangeInfo)) # Full Text
+print(('{} {:.' + str(precision) + 'f}').format(data['symbol'], price)) # Short Text
+
+if percentChange > PRICE_CHANGE_URGENT_PERCENT:
+    exit(33)
