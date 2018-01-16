@@ -80,6 +80,19 @@ instance=stellar
 command=~/path/to/i3blocks-crypto/crypto
 ```
 
+### Display Price in BTC
+
+By default the coin values are displayed in USD. Add the argument BTC to the command string to make the output price be displayed in BTC
+
+```
+[crypto]
+label=$
+markup=pango
+interval=61
+instance=waves
+command=~/path/to/i3blocks-crypto/crypto BTC
+```
+
 ### Price Change Alerts
 
 By default, the price change is based on previous hour. Available: hourly (default) (`1h`), daily (`24h`) and weekly (`7d`) price changes. To customize which price change period to use, modify the `PRICE_CHANGE_PERIOD` variable in the "crypto" script.
