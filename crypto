@@ -13,10 +13,22 @@ coin = os.environ.get('BLOCK_INSTANCE', 'bitcoin')
 r = requests.get(API_URL.format(coin))
 data = json.loads(r.text)[0]
 
-price = float(data['price_usd'])
-if price > 100: precision = 0
-elif price > 0.1: precision = 2
-else: precision = 6
+base = 'USD'
+c = len(sys.argv)
+if c > 1: base = sys.argv[1]
+
+if base == 'BTC':
+    price = float(data['price_btc'])
+    precision = 8
+else:
+    price = float(data['price_usd'])
+    if price > 100:
+        precision = 0
+    elif price > 0.1:
+        precision = 2
+    else:
+        precision = 6
+
 
 percentChange = float(data['percent_change_' + PRICE_CHANGE_PERIOD])
 percentChangeFormat = '<span color="{}">{}{:.2f}%</span>'
