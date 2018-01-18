@@ -1,44 +1,59 @@
 # i3blocks-crypto
 
-![BTC, BCH, ETH crypto i3blocks](https://user-images.githubusercontent.com/19287477/34461337-9bc48ff4-ee61-11e7-8676-638dd5d1b75b.png)
+![B&W Themed i3blocks-crypto](https://user-images.githubusercontent.com/19287477/35080253-485a4400-fc47-11e7-8ef0-2208869ac822.png)
+
+:dollar: View your favorite coins' ticker prices with i3blocks.
 
 ## Setup
 
-Requirements:
+![BTC, BCH, ETH i3blocks-crypto](https://user-images.githubusercontent.com/19287477/34461337-9bc48ff4-ee61-11e7-8676-638dd5d1b75b.png)
+
+### Requirements
 * i3
 * i3bar
 * i3blocks
 * Python 3. Works on Python 2 as well, just remove the `3` from `#!/usr/bin/env python3` on the top line of the "crypto" script.
-  * requests library
-* (Optional, but recommended) Nerd font for custom icons (bitcoin's B symbol, bitcoin cash's cash icon, ethereum's diamond icon, or any other icon you want) to display. I'm using Roboto Mono Nerd Font Regular.
+  * requests library (`pip3 install requests`)
+* (Optional, but recommended) Nerd Font for custom icons (bitcoin's B symbol, bitcoin cash's cash icon, ethereum's diamond icon, or any other icon you want) to display. I'm using Roboto Mono Nerd Font Regular.
 
-Add the `pango:` prefix to the `font` attribute within your i3 config file for HTML colors to work. Eg. `font pango:RobotoMono Nerd Font Regular 8`.
+### Configurations
 
-Add this to your i3blocks config, remember to change the path within the command attribute to point to the "crypto" script:
-```
-[crypto]
-label=
-markup=pango
-interval=60
-instance=bitcoin
-command=~/path/to/i3blocks-crypto/crypto
+1. Ensure the "crypto" script within this repo has execute permission. If unsure, run the following:
 
-[crypto]
-label=
-markup=pango
-interval=57
-instance=bitcoin-cash
-command=~/path/to/i3blocks-crypto/crypto
+    ```sh
+    chmod +x crypto
+    ```
 
-[crypto]
-label=
-markup=pango
-interval=63
-instance=ethereum
-command=~/path/to/i3blocks-crypto/crypto
-```
+2. Ensure the `font` attribute within **i3 config** is prefixed with `pango:` for HTML colors to work. If it is already prefixed, skip this step. Example:
 
-Ensure "crypto" script has executable permission.
+    ```
+    font pango:RobotoMono Nerd Font Regular 8
+    ```
+
+3. Add the following to your **i3blocks config** (3 instances, Bitcoin, Bitcoin Cash and Ethereum). Remember to change the path within the command attribute to point to the "crypto" script.
+
+    ```
+    [crypto]
+    label=
+    markup=pango
+    interval=60
+    instance=bitcoin
+    command=~/path/to/i3blocks-crypto/crypto # CHANGE ME
+
+    [crypto]
+    label=
+    markup=pango
+    interval=57
+    instance=bitcoin-cash
+    command=~/path/to/i3blocks-crypto/crypto # CHANGE ME
+
+    [crypto]
+    label=
+    markup=pango
+    interval=63
+    instance=ethereum
+    command=~/path/to/i3blocks-crypto/crypto # CHANGE ME
+    ```
 
 ## Customization
 
@@ -103,6 +118,7 @@ Price changes above 10% will make the ticker turn red. To change this behaviour,
 
 ## Ideas
 
+* Add option to use Bitfinex API instead of CoinMarketCap. Perhaps use any exchange with ccxt
 * Trigger something when block is clicked. Open coin's information in web browser, or copy the current price, or open exchange in web browser, etc.
 * Add indicator functionality. Alert whenever an indicator has a crossover, SMA? PSAR? etc.
 
