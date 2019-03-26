@@ -7,33 +7,40 @@ import os
 import sys
 
 PRICE_CHANGE_PERIOD = '1h' # Available: '1h', '24h', '7d'
-PRICE_CHANGE_URGENT_PERCENT = 10
+PRICE_CHANGE_URGENT_PERCENT = 5
 
 API_URL = 'https://api.coinmarketcap.com/v1/ticker/{}/' # CoinMarketCap API
+API_CRYPTOCOMPARE_URL = 'https://min-api.cryptocompare.com/data/pricemultifull?fsyms={}&tsyms={}' # CryptoCompare API
 coin = os.environ.get('BLOCK_INSTANCE', 'bitcoin')
-r = requests.get(API_URL.format(coin))
-data = json.loads(r.text)[0]
-
 base = 'usd'
 if len(sys.argv) > 1: base = sys.argv[1]
 
-if base.lower() == 'btc':
-    price = float(data['price_btc'])
-    precision = 8
-else:
-    price = float(data['price_usd'])
-    if price > 100: precision = 0
-    elif price > 0.1: precision = 2
-    else: precision = 6
+percentChangeInfo = 0
+percentChange = 0
 
-percentChange = float(data['percent_change_' + PRICE_CHANGE_PERIOD])
+base = base.lower()
 percentChangeFormat = '<span color="{}">{}{:.2f}%</span>'
+
+if base.lower() == 'eth':
+    r = requests.get(API_CRYPTOCOMPARE_URL.format(coin, 'ETH'))
+    data = json.loads(r.text)
+    raw_data = data['RAW'][coin]['ETH']
+    price = float(raw_data['PRICE'])
+    precision = 8
+    percentChange = float(raw_data['CHANGEPCT24HOUR'])
+else:
+    r = requests.get(API_URL.format(coin))
+    data = json.loads(r.text)[0]
+    price = float(data['price_'+base])
+    precision = 8 if base == 'btc' else 2
+    percentChange = float(data['percent_change_' + PRICE_CHANGE_PERIOD])
+
 if percentChange > 0: percentChangeInfo = percentChangeFormat.format('#3BB92D', '', percentChange)
 elif percentChange == 0: percentChangeInfo = percentChangeFormat.format('#CCCCCC', '', percentChange)
 else: percentChangeInfo = percentChangeFormat.format('#F7555E', '', percentChange)
 
-print(('{} {:.' + str(precision) + 'f} {}').format(data['symbol'], price, percentChangeInfo)) # Full Text
-print(('{} {:.' + str(precision) + 'f}').format(data['symbol'], price)) # Short Text
+print(('{} {:.' + str(precision) + 'f} {}').format('symbol' in data and data['symbol'] or coin, price, percentChangeInfo)) # Full Text
+print(('{} {:.' + str(precision) + 'f}').format('symbol' in data and data['symbol'] or coin, price)) # Short Text
 
 if percentChange > PRICE_CHANGE_URGENT_PERCENT:
     exit(33)
