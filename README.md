@@ -95,9 +95,9 @@ instance=stellar
 command=~/path/to/i3blocks-crypto/crypto
 ```
 
-### Display Price in BTC
+### Display Price in BTC or ETH
 
-By default the coin values are displayed in USD. Add the argument BTC to the command string to make the output price be displayed in BTC
+By default the coin values are displayed in USD. Add the argument with base currency to the command string to make the output price be displayed in specified currency
 
 ```
 [crypto]
@@ -105,7 +105,7 @@ label=$
 markup=pango
 interval=61
 instance=waves
-command=~/path/to/i3blocks-crypto/crypto BTC
+command=~/path/to/i3blocks-crypto/crypto BTC # or ETH
 ```
 
 ### Price Change Alerts
